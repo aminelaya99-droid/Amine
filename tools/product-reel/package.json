@@ -1,0 +1,8 @@
+{
+  "name": "product-reel",
+  "private": true,
+  "description": "9:16 product reel from one product photo: camera moves, Darija cards, price end card",
+  "dependencies": {
+    "@fontsource/cairo": "^5.0.0"
+  }
+}
