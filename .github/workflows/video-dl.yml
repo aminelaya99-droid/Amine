@@ -1,0 +1,139 @@
+# Video downloader: Claude's session cannot reach YouTube/Instagram/TikTok,
+# GitHub's runners can. A request file pushed to tools/video-dl/requests/
+# (one URL per line) triggers this job; the downloaded files come back as a
+# commit on the ref refs/video-dl/<request-id>, which the session fetches with
+# tools/video-dl/fetch.sh. Refs older than 24h are deleted on every run.
+name: video-dl
+
+on:
+  push:
+    paths:
+      - 'tools/video-dl/requests/**'
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Video URL'
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: video-dl
+  cancel-in-progress: false
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # yt-dlp needs a JavaScript runtime to solve YouTube's player challenges.
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Install yt-dlp and ffmpeg
+        run: |
+          python -m pip install -q -U "yt-dlp[default]"
+          if ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          fi
+          yt-dlp --version
+
+      - name: Collect requests
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          MANUAL_URL: ${{ inputs.url }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/req"
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            printf '%s\n' "$MANUAL_URL" > "$RUNNER_TEMP/req/$(date -u +%Y%m%d-%H%M%S)-manual.txt"
+          else
+            if [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] \
+               && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+              files=$(git diff --name-only --diff-filter=AM "$BEFORE" HEAD -- tools/video-dl/requests/)
+            else
+              files=$(git diff-tree --no-commit-id --name-only --diff-filter=AM -r HEAD -- tools/video-dl/requests/)
+            fi
+            for f in $files; do
+              case "$f" in *.txt) cp "$f" "$RUNNER_TEMP/req/" ;; esac
+            done
+          fi
+          ls -l "$RUNNER_TEMP/req"
+
+      - name: Download
+        run: |
+          shopt -s nullglob
+          for f in "$RUNNER_TEMP"/req/*.txt; do
+            id=$(basename "$f" .txt)
+            out="$RUNNER_TEMP/out/$id"; mkdir -p "$out"
+            n=0
+            while IFS= read -r url || [ -n "$url" ]; do
+              url=$(printf '%s' "$url" | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+              case "$url" in ''|\#*) continue ;; esac
+              n=$((n+1))
+              echo "::group::[$id] #$n $url"
+              if yt-dlp --no-playlist --newline --no-progress \
+                   -S "res:1080,vcodec:h264,acodec:m4a" -f "bv*+ba/b" \
+                   --merge-output-format mp4 --max-filesize 1500M \
+                   --restrict-filenames -o "$out/${n}_%(title).50B_[%(id)s].%(ext)s" \
+                   --print-to-file "after_move:%(filepath)s	%(title)s	%(uploader)s	%(duration)s	%(webpage_url)s" "$out/meta.tsv" \
+                   -- "$url" > "$out/log_$n.txt" 2>&1; then
+                printf 'ok\t%s\t%s\n' "$n" "$url" >> "$out/status.tsv"
+              else
+                printf 'error\t%s\t%s\n' "$n" "$url" >> "$out/status.tsv"
+              fi
+              tail -n 40 "$out/log_$n.txt"
+              echo "::endgroup::"
+            done < "$f"
+            # GitHub refuses blobs over 100 MB: split big files, fetch.sh joins them.
+            for v in "$out"/*.mp4 "$out"/*.webm "$out"/*.mkv; do
+              if [ "$(stat -c%s "$v")" -gt 95000000 ]; then
+                split -b 95M -d -a 3 "$v" "$v.part" && rm "$v"
+              fi
+            done
+            ls -l "$out"
+          done
+
+      - name: Publish results
+        if: always()
+        run: |
+          shopt -s nullglob
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for d in "$RUNNER_TEMP"/out/*/; do
+            id=$(basename "$d")
+            export GIT_INDEX_FILE="$RUNNER_TEMP/index-$id"
+            rm -f "$GIT_INDEX_FILE"
+            for p in "$d"*; do
+              blob=$(git hash-object -w "$p")
+              git update-index --add --cacheinfo 100644 "$blob" "$(basename "$p")"
+            done
+            tree=$(git write-tree)
+            commit=$(echo "video-dl $id" | git commit-tree "$tree")
+            unset GIT_INDEX_FILE
+            git push -q origin "$commit:refs/video-dl/$id" \
+              || git push -q origin "$commit:refs/tags/video-dl-$id"
+            echo "published $id -> $commit"
+          done
+
+      - name: Delete results older than 24h
+        if: always()
+        run: |
+          now=$(date -u +%s)
+          git ls-remote origin 'refs/video-dl/*' 'refs/tags/video-dl-*' | while read -r _ ref; do
+            id=${ref##*/}; id=${id#video-dl-}
+            t=$(date -u -d "${id:0:8} ${id:9:2}:${id:11:2}:${id:13:2}" +%s 2>/dev/null) || continue
+            if [ $((now - t)) -gt 86400 ]; then
+              git push -q origin ":$ref" && echo "deleted $ref" || true
+            fi
+          done
