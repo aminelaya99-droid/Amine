@@ -1,0 +1,4 @@
+ok	1	keywords تسويق الكتروني
+ok	2	outliers @MrBeast --limit 30 --tab shorts --enrich 2
+error	3	info https://youtu.be/Rcg2LwVhL_w
+error	4	transcript https://youtu.be/Rcg2LwVhL_w

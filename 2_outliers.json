@@ -1,0 +1,394 @@
+{
+ "channel": "https://www.youtube.com/@MrBeast",
+ "tabs": {
+  "shorts": {
+   "count": 30,
+   "median_views": 137000000.0,
+   "mean_views": 221566667,
+   "min_ratio": 3.0,
+   "outliers": [
+    {
+     "id": "B9LizOAAoLg",
+     "title": "I’m Granting Wishes For My Subscribers",
+     "views": 722000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/B9LizOAAoLg",
+     "ratio": 5.27,
+     "details_error": "ERROR: [youtube] B9LizOAAoLg: Sign in to confirm you’re not a bot. This helps protect our community. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+    },
+    {
+     "id": "QAkEMtJpq3c",
+     "title": "Hit The Button, Win $1,000",
+     "views": 664000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/QAkEMtJpq3c",
+     "ratio": 4.85,
+     "details_error": "ERROR: [youtube] QAkEMtJpq3c: Sign in to confirm you’re not a bot. This helps protect our community. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+    },
+    {
+     "id": "hYahU_Cqwp8",
+     "title": "YouTube CEO Has A Surprise For Me",
+     "views": 657000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/hYahU_Cqwp8",
+     "ratio": 4.8
+    },
+    {
+     "id": "hCuqh2NU2Yg",
+     "title": "World's Fastest Date",
+     "views": 597000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/hCuqh2NU2Yg",
+     "ratio": 4.36
+    },
+    {
+     "id": "dqpCvSU-ECE",
+     "title": "Can He Make This Shot?",
+     "views": 518000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/dqpCvSU-ECE",
+     "ratio": 3.78
+    },
+    {
+     "id": "y1UVAtHALaA",
+     "title": "I Surprised a Random Subscriber With $10,000",
+     "views": 436000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/y1UVAtHALaA",
+     "ratio": 3.18
+    }
+   ],
+   "videos": [
+    {
+     "id": "MxRpi8BEN4Q",
+     "title": "Turning A Kid’s Drawing Into Real Life",
+     "views": 60000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/MxRpi8BEN4Q",
+     "ratio": 0.44
+    },
+    {
+     "id": "dnbLdUyozKM",
+     "title": "Closest To 50 Pounds Wins A Car",
+     "views": 23000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/dnbLdUyozKM",
+     "ratio": 0.17
+    },
+    {
+     "id": "WjCH5JUNzao",
+     "title": "Can I Beat Magnus Carlsen?",
+     "views": 22000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/WjCH5JUNzao",
+     "ratio": 0.16
+    },
+    {
+     "id": "sHpEqeSByPI",
+     "title": "Unboxing The World’s Largest Toy",
+     "views": 35000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/sHpEqeSByPI",
+     "ratio": 0.26
+    },
+    {
+     "id": "kPI9Mc35mOg",
+     "title": "Trap Door Roulette",
+     "views": 144000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/kPI9Mc35mOg",
+     "ratio": 1.05
+    },
+    {
+     "id": "41UzbuW6wJs",
+     "title": "Can A Robot Do My Chores?",
+     "views": 107000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/41UzbuW6wJs",
+     "ratio": 0.78
+    },
+    {
+     "id": "mND4T0lzg_g",
+     "title": "How People Treat You Based on Subscribers",
+     "views": 55000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/mND4T0lzg_g",
+     "ratio": 0.4
+    },
+    {
+     "id": "Y8IJi7iP5vk",
+     "title": "Last To Fall Wins",
+     "views": 201000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/Y8IJi7iP5vk",
+     "ratio": 1.47
+    },
+    {
+     "id": "aNI2jv7lBPQ",
+     "title": "Giving $10,000 To A Random Subscriber",
+     "views": 104000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/aNI2jv7lBPQ",
+     "ratio": 0.76
+    },
+    {
+     "id": "CEJXqm2eiJ0",
+     "title": "What’s Inside My Briefcase?",
+     "views": 166000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/CEJXqm2eiJ0",
+     "ratio": 1.21
+    },
+    {
+     "id": "T_SMf9j50uc",
+     "title": "Can We Build an Entire Village?",
+     "views": 37000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/T_SMf9j50uc",
+     "ratio": 0.27
+    },
+    {
+     "id": "5mU6SRS2Bxo",
+     "title": "World’s Largest Tennis Match",
+     "views": 27000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/5mU6SRS2Bxo",
+     "ratio": 0.2
+    },
+    {
+     "id": "LiH-P4rSkLI",
+     "title": "Can You Pass This Classroom Quiz?",
+     "views": 100000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/LiH-P4rSkLI",
+     "ratio": 0.73
+    },
+    {
+     "id": "NMR32p4kwAQ",
+     "title": "Mr Rizz IRL",
+     "views": 130000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/NMR32p4kwAQ",
+     "ratio": 0.95
+    },
+    {
+     "id": "f7y2XikE7sY",
+     "title": "Paying For Food With My Car",
+     "views": 177000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/f7y2XikE7sY",
+     "ratio": 1.29
+    },
+    {
+     "id": "Df5Y-2ndQyU",
+     "title": "Read My Book, You Could Win $1,000,000",
+     "views": 32000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/Df5Y-2ndQyU",
+     "ratio": 0.23
+    },
+    {
+     "id": "egvLKQe6I4I",
+     "title": "Don't Pop the Balloon",
+     "views": 363000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/egvLKQe6I4I",
+     "ratio": 2.65
+    },
+    {
+     "id": "LgbyEFILLJI",
+     "title": "$1 vs $10,000 Cake",
+     "views": 229000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/LgbyEFILLJI",
+     "ratio": 1.67
+    },
+    {
+     "id": "YA_kX8hu1gg",
+     "title": "This Plane Takes Off in 12 Seconds",
+     "views": 52000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/YA_kX8hu1gg",
+     "ratio": 0.38
+    },
+    {
+     "id": "XCGVurja73c",
+     "title": "I Raced The Fastest Man On Earth",
+     "views": 247000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/XCGVurja73c",
+     "ratio": 1.8
+    },
+    {
+     "id": "r9aWeGqp43s",
+     "title": "We Made Make-A-Wish Kids’ Dreams Come True",
+     "views": 24000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/r9aWeGqp43s",
+     "ratio": 0.18
+    },
+    {
+     "id": "xDuuM3ERr5Q",
+     "title": "Guess The Youtuber = Win $1,000",
+     "views": 296000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/xDuuM3ERr5Q",
+     "ratio": 2.16
+    },
+    {
+     "id": "xCl2gndzFqE",
+     "title": "POV: You Time Traveled Back to 2016",
+     "views": 23000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/xCl2gndzFqE",
+     "ratio": 0.17
+    },
+    {
+     "id": "y1UVAtHALaA",
+     "title": "I Surprised a Random Subscriber With $10,000",
+     "views": 436000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/y1UVAtHALaA",
+     "ratio": 3.18
+    },
+    {
+     "id": "hYahU_Cqwp8",
+     "title": "YouTube CEO Has A Surprise For Me",
+     "views": 657000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/hYahU_Cqwp8",
+     "ratio": 4.8
+    },
+    {
+     "id": "SllXaJiQjBA",
+     "title": "Every Youtube Play Button",
+     "views": 399000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/SllXaJiQjBA",
+     "ratio": 2.91
+    },
+    {
+     "id": "dqpCvSU-ECE",
+     "title": "Can He Make This Shot?",
+     "views": 518000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/dqpCvSU-ECE",
+     "ratio": 3.78
+    },
+    {
+     "id": "QAkEMtJpq3c",
+     "title": "Hit The Button, Win $1,000",
+     "views": 664000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/QAkEMtJpq3c",
+     "ratio": 4.85,
+     "details_error": "ERROR: [youtube] QAkEMtJpq3c: Sign in to confirm you’re not a bot. This helps protect our community. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+    },
+    {
+     "id": "hCuqh2NU2Yg",
+     "title": "World's Fastest Date",
+     "views": 597000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/hCuqh2NU2Yg",
+     "ratio": 4.36
+    },
+    {
+     "id": "B9LizOAAoLg",
+     "title": "I’m Granting Wishes For My Subscribers",
+     "views": 722000000,
+     "duration": null,
+     "url": "https://www.youtube.com/shorts/B9LizOAAoLg",
+     "ratio": 5.27,
+     "details_error": "ERROR: [youtube] B9LizOAAoLg: Sign in to confirm you’re not a bot. This helps protect our community. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+    }
+   ],
+   "outlier_title_words": [
+    [
+     "000",
+     2
+    ],
+    [
+     "granting",
+     1
+    ],
+    [
+     "wishes",
+     1
+    ],
+    [
+     "subscribers",
+     1
+    ],
+    [
+     "hit",
+     1
+    ],
+    [
+     "button",
+     1
+    ],
+    [
+     "win",
+     1
+    ],
+    [
+     "youtube",
+     1
+    ],
+    [
+     "ceo",
+     1
+    ],
+    [
+     "has",
+     1
+    ],
+    [
+     "surprise",
+     1
+    ],
+    [
+     "world",
+     1
+    ],
+    [
+     "fastest",
+     1
+    ],
+    [
+     "date",
+     1
+    ],
+    [
+     "can",
+     1
+    ],
+    [
+     "make",
+     1
+    ],
+    [
+     "this",
+     1
+    ],
+    [
+     "shot",
+     1
+    ],
+    [
+     "surprised",
+     1
+    ],
+    [
+     "random",
+     1
+    ],
+    [
+     "subscriber",
+     1
+    ]
+   ]
+  }
+ },
+ "channel_name": "MrBeast"
+}
