@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: Cairo; font-weight: 700; src: url(node_modules/@fontsource/cairo/files/cairo-arabic-700-normal.woff2) format("woff2"); }
+  @font-face { font-family: Cairo; font-weight: 900; src: url(node_modules/@fontsource/cairo/files/cairo-arabic-900-normal.woff2) format("woff2"); }
+  @font-face { font-family: CairoLatin; font-weight: 700; src: url(node_modules/@fontsource/cairo/files/cairo-latin-700-normal.woff2) format("woff2"); }
+  @font-face { font-family: CairoLatin; font-weight: 900; src: url(node_modules/@fontsource/cairo/files/cairo-latin-900-normal.woff2) format("woff2"); }
+  :root { --ink: #141414; --acc: #F26B1D; }
+  html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #1a1b1e; }
+  body { font-family: Cairo, CairoLatin, sans-serif; color: var(--ink); }
+  #root { position: absolute; inset: 0; overflow: hidden; }
+  .scene { position: absolute; inset: 0; opacity: 0; overflow: hidden; }
+  .bg { position: absolute; inset: -80px; background-size: cover; background-position: center;
+        filter: blur(38px) brightness(.5) saturate(1.1); }
+  .win { position: absolute; overflow: hidden; border-radius: 36px;
+         box-shadow: 0 30px 80px rgba(0,0,0,.55), 0 0 0 2px rgba(255,255,255,.08); }
+  .win img { position: absolute; transform-origin: 50% 50%; }
+  .card { position: absolute; left: 60px; right: 250px; top: 250px; text-align: center; opacity: 0; }
+  .pill { display: inline-block; background: #fff; color: var(--ink); font-weight: 900;
+          font-size: 80px; line-height: 1.3; padding: 18px 44px 26px; border-radius: 28px;
+          box-shadow: 0 18px 40px rgba(0,0,0,.35); }
+  .pill b { color: var(--acc); font-weight: 900; unicode-bidi: isolate; }
+  .sub { display: table; margin: 22px auto 0; padding: 6px 26px 12px; border-radius: 16px;
+         background: rgba(20,20,20,.82); color: #fff; font-weight: 700; font-size: 44px; }
+  #end { position: absolute; left: 60px; right: 250px; top: 250px; text-align: center; opacity: 0; color: #fff; }
+  #end .price { font-weight: 900; font-size: 150px; color: var(--acc); line-height: 1; }
+  #end .price small { font-size: 80px; }
+  #end .cod { margin-top: 26px; font-weight: 900; font-size: 54px; }
+  #end .cta { display: inline-block; margin-top: 30px; background: #fff; color: var(--ink); font-weight: 900;
+              font-size: 54px; padding: 12px 38px 20px; border-radius: 24px; }
+  #end .cta b { color: var(--acc); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="end">
+  <div class="price">2900 <small>دج</small></div>
+  <div class="cod">الدفع عند الاستلام · 58 ولاية</div>
+  <div class="cta">اكتب <b>«كوك»</b> في الكومنتار</div>
+</div>
+<script>
+// One scene per bar of the music (2.2 s). Each scene shows a crop of a supplier
+// photo (x0, y0, x1, y1 in its 1080x1080 pixels, chosen to leave out the Chinese
+// text) in a rounded window over a blurred copy of the same photo.
+const BAR = 2.2, WIN_W = 1000, WIN_H = 1000, WIN_CY = 1010, MAX_SCALE = 1.7;
+const SCENES = [
+  { img: "img/s1.png", crop: [0, 0, 1080, 1080],   card: "<b>4 وضعيات</b><br>بلا حامل" },
+  { img: "img/s2.png", crop: [20, 790, 1060, 1050], card: "بالطول، بالعرض،<br><b>ولا مايل</b>" },
+  { img: "img/s2.png", crop: [20, 270, 535, 690],   card: "تدور <b dir=\"ltr\">360°</b><br>وتتقلب <b dir=\"ltr\">120°</b>" },
+  { img: "img/s3.png", crop: [150, 0, 1080, 790],   card: "تشارجي<br><b>بلا ما تنحّيه</b>", sub: "حلقة مغناطيسية MagSafe" },
+  { img: "img/s5.png", crop: [0, 330, 660, 1080],   card: "تنحّيه<br><b>بضغطة وحدة</b>" },
+  { img: "img/s6.png", crop: [30, 330, 1060, 760],  card: "<b>4 ملم</b> و<b>38 غرام</b>", sub: "خفيف، كأنك بلا كوك" },
+  { img: "img/s1.png", crop: [465, 100, 1035, 525], card: "<b>3 ألوان</b>", sub: "كحل · برتقالي · فضي" },
+  { img: "img/s1.png", crop: [0, 55, 445, 1005], end: true, bars: 2, winH: 760, winCY: 1060 },
+];
+const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+const clamp01 = x => Math.max(0, Math.min(1, x));
+
+const root = document.getElementById("root");
+let t0 = 0;
+for (const s of SCENES) {
+  s.start = t0; s.dur = (s.bars || 1) * BAR; t0 += s.dur;
+  const [x0, y0, x1, y1] = s.crop, w = x1 - x0, h = y1 - y0;
+  const maxH = s.winH || WIN_H;
+  const k = Math.min(WIN_W / w, maxH / h, MAX_SCALE);
+  const ww = w * k, wh = h * k, cy = s.winCY || WIN_CY;
+  const el = document.createElement("div");
+  el.className = "scene";
+  el.innerHTML = `<div class="bg" style="background-image:url(${s.img})"></div>
+    <div class="win" style="left:${540 - ww / 2}px;top:${cy - wh / 2}px;width:${ww}px;height:${wh}px">
+      <img src="${s.img}" style="width:${1080 * k}px;left:${-x0 * k}px;top:${-y0 * k}px;transform-origin:${(x0 + w / 2) * k}px ${(y0 + h / 2) * k}px"></div>` +
+    (s.card ? `<div class="card"><span class="pill">${s.card}</span>${s.sub ? `<span class="sub">${s.sub}</span>` : ""}</div>` : "");
+  root.appendChild(el);
+  s.el = el; s.win = el.querySelector(".win"); s.pic = el.querySelector(".win img"); s.cardEl = el.querySelector(".card");
+}
+const TOTAL = t0;
+const END = document.getElementById("end");
+
+window.render = function (t) {
+  for (const s of SCENES) {
+    const local = t - s.start;
+    const on = local >= -0.0001 && local < s.dur;
+    // fade the outgoing scene over its last 0.18 s, pop the incoming one on the downbeat
+    const out = clamp01((s.dur - local) / 0.18);
+    s.el.style.opacity = on ? (s.start === 0 && local < 0.001 ? 1 : out) : 0;
+    if (!on) continue;
+    const pop = s.start === 0 ? 1 : ease(clamp01(local / 0.3));
+    s.win.style.transform = `scale(${0.92 + 0.08 * pop})`;
+    s.pic.style.transform = `scale(${1 + 0.06 * (local / s.dur)})`;      // slow push-in
+    if (s.cardEl) {
+      const a = s.start === 0 ? 1 : ease(clamp01((local - 0.05) / 0.25));
+      const b = clamp01((s.dur - 0.25 - local) / 0.2);
+      s.cardEl.style.opacity = Math.min(a, b);
+      s.cardEl.style.transform = `translateY(${(1 - a) * 40}px)`;
+    }
+    if (s.end) {
+      const a = ease(clamp01((local - 0.05) / 0.3)), b = clamp01((s.dur - 0.2 - local) / 0.2);
+      END.style.opacity = Math.min(a, b);
+      END.style.transform = `translateY(${(1 - a) * 60}px)`;
+    } else {
+      END.style.opacity = 0;
+    }
+  }
+};
+window.TOTAL = TOTAL;
+window.render(0);
+</script>
+</body>
+</html>

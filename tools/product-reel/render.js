@@ -18,7 +18,7 @@ const path = require("path");
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
   await page.goto("file://" + path.join(dir, "compose.html"));
   await page.evaluate(() => document.fonts.ready);
-  await page.waitForFunction(() => document.getElementById("prod").complete);
+  await page.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth > 0));
 
   const n = Math.round(secs * fps);
   for (let i = 0; i < n; i++) {
