@@ -1,0 +1,4 @@
+keywords تسويق الكتروني
+outliers @MrBeast --limit 30 --tab shorts --enrich 2
+info https://youtu.be/Rcg2LwVhL_w
+transcript https://youtu.be/Rcg2LwVhL_w
