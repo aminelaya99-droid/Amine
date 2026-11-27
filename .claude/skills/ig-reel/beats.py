@@ -26,8 +26,9 @@ import json
 import re
 import sys
 
-WORD_RE = re.compile(r"[A-Za-z0-9$%'’-]+")
-SENT_RE = re.compile(r"[^.!?]+[.!?]*")
+# Arabic letters count as words too, so Darija scripts are timed and scored.
+WORD_RE = re.compile(r"[A-Za-z0-9$%'’ء-ْ٠-٩ٱ-ۓ-]+")
+SENT_RE = re.compile(r"[^.!?؟]+[.!?؟]*")
 CONCRETE_RE = re.compile(r"\$\s?\d|\b\d[\d,.]*\b|(?<!^)\b[A-Z][a-z]{2,}\b", re.MULTILINE)
 STOPWORDS = {
     "the", "a", "an", "and", "or", "but", "if", "of", "to", "in", "on", "for",

@@ -36,7 +36,8 @@ import re
 import statistics
 import sys
 
-WORD_RE = re.compile(r"[A-Za-z0-9$%'’-]+")
+# Arabic letters count as words too, so Darija scripts are timed and scored.
+WORD_RE = re.compile(r"[A-Za-z0-9$%'’ء-ْ٠-٩ٱ-ۓ-]+")
 NUMBER_RE = re.compile(
     r"\$\s?\d[\d,]*(?:\.\d+)?"                       # money, whole
     r"|\b\d[\d,]*(?:\.\d+)?\s?"                      # a figure, with or
@@ -56,10 +57,15 @@ SPOKEN_NUMBERS = {
     "ten", "eleven", "twelve", "fifteen", "twenty", "thirty", "forty", "fifty",
     "sixty", "seventy", "eighty", "ninety", "hundred", "thousand", "million",
     "billion", "dozen", "half", "twice", "triple",
+    # Algerian Darija
+    "زوج", "ثلاثة", "تلاتة", "ربعة", "خمسة", "ستة", "سبعة", "عشرة", "مية",
+    "ألف", "الف", "مليون", "نص",
 }
 MONEY_WORDS = {
     "dollars", "dollar", "bucks", "grand", "percent", "cents",
     "millionaire", "billionaire", "revenue", "profit", "salary", "rent",
+    # Algerian Darija
+    "دينار", "دج", "دورو", "سنتيم", "سومة", "السومة", "السعر", "سعر", "مجاني", "بلاش",
 }
 
 # Words that put something on the line. A hook with none of these is a
@@ -76,6 +82,10 @@ STAKES = {
     "before", "until", "instead", "but", "except", "unless", "problem",
     "risk", "danger", "warning", "regret", "wish", "should", "shouldn't",
     "still", "already", "only", "without", "versus", "vs", "actually",
+    # Algerian Darija
+    "ما", "ماشي", "مكانش", "ماكانش", "حبس", "خسرت", "ضيعت", "تكسر", "طاح", "غلط",
+    "خطأ", "مشكل", "المشكل", "غير", "قبل", "بدل", "بلا", "عمرك", "ابدا", "أبدا",
+    "سر", "الحقيقة", "خسارة", "غالي", "رخيص", "حذاري", "بصح", "ضد",
 }
 
 # Openers that spend the first second saying nothing.
@@ -86,6 +96,8 @@ WEAK_OPENERS = [
     "have you", "did you", "do you", "are you", "in this", "in today",
     "the thing", "a lot", "there is", "there are", "this is", "it is",
     "as a", "when it", "if you've", "you know",
+    # Algerian Darija
+    "السلام", "سلام", "مرحبا", "اهلا", "اليوم", "يا جماعة", "خاوتي", "في هاد", "في هذا",
 ]
 
 # Imperatives that earn the front position.
@@ -93,6 +105,9 @@ IMPERATIVES = {
     "stop", "steal", "copy", "delete", "try", "watch", "read", "save",
     "use", "build", "make", "write", "send", "take", "start", "quit",
     "never", "always", "don't", "dont", "do", "put", "run", "check",
+    # Algerian Darija
+    "حبس", "شوف", "شوفو", "اسمع", "جرب", "جربو", "احفظ", "ماتشريش", "متشريش",
+    "دير", "ديرو", "اكتب", "كتب", "خبي", "طيّح", "طيح",
 }
 
 DEALBREAKERS = [
@@ -100,7 +115,7 @@ DEALBREAKERS = [
      "Opens with \"stop scrolling\". Asking for attention proves you have not earned it."),
     (re.compile(r"(?i)\b(?:in (?:this|today'?s) (?:video|reel)|i'?m going to show you|i'?ll show you how)\b"),
      "Video preamble. Delete it and open on the payoff."),
-    (re.compile(r"(?i)^\s*(?:hey |hi |what'?s up |welcome )"),
+    (re.compile(r"(?i)^\s*(?:hey |hi |what'?s up |welcome |السلام|سلام |مرحبا|اهلا)"),
      "Greeting. Nobody came to the feed to be greeted."),
     (HASHTAG_RE,
      "Hashtag in the hook. Hashtags belong at the bottom of the caption, if anywhere."),
@@ -201,11 +216,11 @@ def check_address(text):
     """Aimed at one viewer, or floating in the air."""
     low = text.lower()
     w = [x.lower().strip("'’") for x in words(text)]
-    if re.search(r"\b(you|your|you're|youre|yourself)\b", low):
+    if re.search(r"\b(you|your|you're|youre|yourself|انت|نتا|نتي|راك|راكي|عندك|تاعك|ليك|بيك|تيليفونك|هاتفك)\b", low):
         return 100.0, "speaks to the viewer"
     if w and w[0] in IMPERATIVES:
         return 90.0, f"imperative opener (\"{w[0]}\")"
-    if re.search(r"\b(i|my|me|we|our)\b", low):
+    if re.search(r"\b(i|my|me|we|our|انا|أنا|تاعي|عندي|ليا|حنا|تاعنا)\b", low):
         return 70.0, "first person, no viewer named"
     return 35.0, "third person, nobody in the room"
 
