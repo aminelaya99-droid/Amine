@@ -49,19 +49,20 @@
 <script>
 // Camera keyframes over the 1080x1080 photo: [time s, centre x, centre y, zoom].
 // Between keyframes the camera eases; inside a scene it drifts slowly (ken burns).
+const BAR = 2.2;   // one bar of the music track (109 BPM): every scene is one bar, cuts land on the downbeat
 const CAM = [
-  [0.0,  267, 548, 2.05], [1.9,  267, 548, 2.25],   // ring
-  [2.4,  640, 790, 1.55], [4.1,  640, 790, 1.68],   // right phone on its stand
-  [4.6,  250, 540, 1.10], [6.1,  250, 540, 1.18],   // left phone, metal frame
-  [6.6,  265, 215, 2.10], [8.1,  265, 215, 2.25],   // camera frame
-  [8.6,  150, 900, 2.20], [10.1, 150, 900, 2.35],   // bottom corner + orange detail
-  [10.6, 540, 545, 0.98], [12.2, 540, 545, 1.03],   // whole product
-  [12.7, 540, 346, 0.62], [15.6, 540, 346, 0.65],   // end card: product below the price
-  [16.4, 267, 548, 2.05]                            // back to the ring: loops into frame 1
+  [0.0,  267, 548, 2.05], [1.7,  267, 548, 2.22],   // ring
+  [2.2,  640, 790, 1.55], [3.9,  640, 790, 1.66],   // right phone on its stand
+  [4.4,  250, 540, 1.10], [6.1,  250, 540, 1.17],   // left phone, metal frame
+  [6.6,  265, 215, 2.10], [8.3,  265, 215, 2.22],   // camera frame
+  [8.8,  150, 900, 2.20], [10.5, 150, 900, 2.32],   // bottom corner + orange detail
+  [11.0, 540, 545, 0.98], [12.7, 540, 545, 1.02],   // whole product
+  [13.2, 540, 346, 0.62], [17.1, 540, 346, 0.66],   // end card (2 bars): product below the price
+  [17.6, 267, 548, 2.05]                            // back to the ring: loops into frame 1
 ];
-const CARDS = [["c0", 0.0, 2.15], ["c1", 2.45, 4.35], ["c2", 4.65, 6.35],
-               ["c3", 6.65, 8.35], ["c4", 8.65, 10.35], ["c5", 10.65, 12.45]];
-const END = [12.75, 15.9];
+const CARDS = [["c0", 0.0, 1.75], ["c1", 2.2, 3.95], ["c2", 4.4, 6.15],
+               ["c3", 6.6, 8.35], ["c4", 8.8, 10.55], ["c5", 11.0, 12.75]];
+const END = [13.2, 17.15];
 const ANCHOR_Y = 960;                       // canvas y where the camera centre sits
 const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
 const clamp01 = x => Math.max(0, Math.min(1, x));

@@ -1,5 +1,5 @@
 // Render compose.html frame by frame with Chromium, then encode a 9:16 MP4.
-//   node render.js <dir> [seconds=16.4] [fps=30]
+//   node render.js <dir> [seconds=17.6] [fps=30] [audio.wav]
 const { chromium } = require("playwright");
 const { execFileSync } = require("child_process");
 const fs = require("fs");
@@ -7,8 +7,9 @@ const path = require("path");
 
 (async () => {
   const dir = path.resolve(process.argv[2] || ".");
-  const secs = parseFloat(process.argv[3] || "16.4");
+  const secs = parseFloat(process.argv[3] || "17.6");
   const fps = parseInt(process.argv[4] || "30", 10);
+  const audio = process.argv[5] ? path.resolve(process.argv[5]) : null;
   const frames = path.join(dir, "frames");
   fs.rmSync(frames, { recursive: true, force: true });
   fs.mkdirSync(frames);
@@ -29,7 +30,8 @@ const path = require("path");
   const out = path.join(dir, "reel.mp4");
   execFileSync("ffmpeg", ["-loglevel", "error", "-y",
     "-framerate", String(fps), "-i", path.join(frames, "%05d.jpg"),
-    "-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=48000",
+    ...(audio ? ["-i", audio, "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ar", "48000"]
+              : ["-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=48000"]),
     "-shortest", "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p",
     "-profile:v", "high", "-movflags", "+faststart", "-c:a", "aac", "-b:a", "128k", out]);
   console.log("wrote", out, n, "frames");

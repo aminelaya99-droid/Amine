@@ -14,8 +14,14 @@ npm install                      # خط Cairo
 cp /path/to/photo.png product.png   # صورة مربعة 1080×1080، خلفية بيضاء
 # عدّل في compose.html: نصوص الكروت (#c0..#c5)، بطاقة النهاية (#end)،
 # ونقاط الكاميرا CAM [وقت، x، y، زوم] بإحداثيات الصورة.
-node render.js . 16.4 30         # يخرّج reel.mp4
+python3 music.py music.wav       # موسيقى أصلية: 8 مقاطع (bars)، 109 BPM، كل bar = 2.2 ثانية
+node render.js . 17.6 30 music.wav   # يخرّج reel.mp4 بالموسيقى (بلا music.wav يخرج بلا صوت)
 ```
 
-`render.js` يرسم كل فريم بـ Chromium (Playwright) ومن بعد ffmpeg يركّبهم. الفيديو بلا
-موسيقى عن قصد: الصوت الرائج يتزاد من داخل التطبيق كي تنشر.
+`render.js` يرسم كل فريم بـ Chromium (Playwright) ومن بعد ffmpeg يركّبهم ويوازن الصوت
+على -14 LUFS. `music.py` (يحتاج numpy وscipy) يصنع موسيقى من الصفر، بلا حقوق: kick،
+clap، hats، bass، أكوردات Am-F-C-G، مع "تيك" معدني في البداية، riser قبل كل قطعة،
+وضربة كي تبان بطاقة السعر (`--impact-bar`).
+
+كل لقطة في `compose.html` = bar واحد (2.2 ثانية)، والقطعات على الضربة. إذا بدّلت عدد
+اللقطات، بدّل `--bars` باش الموسيقى والفيديو يدوروا مع بعض.
