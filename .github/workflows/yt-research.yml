@@ -1,0 +1,54 @@
+# YouTube research with no API key (outliers, autocomplete keywords,
+# transcripts, video info). The Claude session cannot reach YouTube, the
+# runner can. Requests are pushed by tools/remote/job.sh yt-research ...;
+# results come back on refs/yt-research/<id>. See tools/yt-research/README.md.
+name: yt-research
+
+on:
+  push:
+    paths:
+      - 'tools/yt-research/requests/**'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: yt-research
+  cancel-in-progress: false
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Install
+        run: python -m pip install -q -U "yt-dlp[default]" "youtube-transcript-api>=1.0"
+
+      - name: Collect requests
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: bash tools/remote/collect.sh yt-research "$RUNNER_TEMP/req"
+
+      - name: Run
+        run: |
+          shopt -s nullglob
+          for f in "$RUNNER_TEMP"/req/*.txt; do
+            id=$(basename "$f" .txt)
+            python tools/yt-research/research.py --request-file "$f" --out "$RUNNER_TEMP/out/$id" || true
+          done
+
+      - name: Publish results
+        if: always()
+        run: bash tools/remote/publish.sh yt-research "$RUNNER_TEMP/out"

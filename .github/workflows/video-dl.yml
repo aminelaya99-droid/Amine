@@ -2,7 +2,8 @@
 # GitHub's runners can. A request file pushed to tools/video-dl/requests/
 # (one URL per line) triggers this job; the downloaded files come back as a
 # commit on the ref refs/video-dl/<request-id>, which the session fetches with
-# tools/video-dl/fetch.sh. Refs older than 24h are deleted on every run.
+# tools/video-dl/fetch.sh (tools/remote/job.sh). Refs older than 24h are
+# deleted on every run.
 name: video-dl
 
 on:
@@ -54,21 +55,12 @@ jobs:
           BEFORE: ${{ github.event.before }}
           MANUAL_URL: ${{ inputs.url }}
         run: |
-          mkdir -p "$RUNNER_TEMP/req"
           if [ "$EVENT" = "workflow_dispatch" ]; then
+            mkdir -p "$RUNNER_TEMP/req"
             printf '%s\n' "$MANUAL_URL" > "$RUNNER_TEMP/req/$(date -u +%Y%m%d-%H%M%S)-manual.txt"
           else
-            if [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] \
-               && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
-              files=$(git diff --name-only --diff-filter=AM "$BEFORE" HEAD -- tools/video-dl/requests/)
-            else
-              files=$(git diff-tree --no-commit-id --name-only --diff-filter=AM -r HEAD -- tools/video-dl/requests/)
-            fi
-            for f in $files; do
-              case "$f" in *.txt) cp "$f" "$RUNNER_TEMP/req/" ;; esac
-            done
+            bash tools/remote/collect.sh video-dl "$RUNNER_TEMP/req"
           fi
-          ls -l "$RUNNER_TEMP/req"
 
       - name: Download
         run: |
@@ -106,34 +98,4 @@ jobs:
 
       - name: Publish results
         if: always()
-        run: |
-          shopt -s nullglob
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for d in "$RUNNER_TEMP"/out/*/; do
-            id=$(basename "$d")
-            export GIT_INDEX_FILE="$RUNNER_TEMP/index-$id"
-            rm -f "$GIT_INDEX_FILE"
-            for p in "$d"*; do
-              blob=$(git hash-object -w "$p")
-              git update-index --add --cacheinfo 100644 "$blob" "$(basename "$p")"
-            done
-            tree=$(git write-tree)
-            commit=$(echo "video-dl $id" | git commit-tree "$tree")
-            unset GIT_INDEX_FILE
-            git push -q origin "$commit:refs/video-dl/$id" \
-              || git push -q origin "$commit:refs/tags/video-dl-$id"
-            echo "published $id -> $commit"
-          done
-
-      - name: Delete results older than 24h
-        if: always()
-        run: |
-          now=$(date -u +%s)
-          git ls-remote origin 'refs/video-dl/*' 'refs/tags/video-dl-*' | while read -r _ ref; do
-            id=${ref##*/}; id=${id#video-dl-}
-            t=$(date -u -d "${id:0:8} ${id:9:2}:${id:11:2}:${id:13:2}" +%s 2>/dev/null) || continue
-            if [ $((now - t)) -gt 86400 ]; then
-              git push -q origin ":$ref" && echo "deleted $ref" || true
-            fi
-          done
+        run: bash tools/remote/publish.sh video-dl "$RUNNER_TEMP/out"
