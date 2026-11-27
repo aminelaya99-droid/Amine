@@ -54,7 +54,9 @@ def channel_base(s):
 
 
 def first_line(e):
-    return str(e).strip().splitlines()[0] if str(e).strip() else type(e).__name__
+    """The error as one line; youtube-transcript-api puts the cause on later lines."""
+    s = " ".join(str(e).split())
+    return s[:400] if s else type(e).__name__
 
 
 def full_info(vid):
