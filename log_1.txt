@@ -1,0 +1,5 @@
+[youtube] Extracting URL: https://www.youtube.com/watch?v=jNQXAC9IVRw
+[youtube] jNQXAC9IVRw: Downloading webpage
+[youtube] jNQXAC9IVRw: Downloading tv samsung player API JSON
+[youtube] jNQXAC9IVRw: Downloading visionos player API JSON
+ERROR: [youtube] jNQXAC9IVRw: Video unavailable. This content isn’t available.
