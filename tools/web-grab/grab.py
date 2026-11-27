@@ -51,6 +51,8 @@ def biggest(url):
     u = re.sub(r"(\.(?:jpe?g|png|webp))_\d+x\d+[^/]*$", r"\1", u, flags=re.I)  # AliExpress / alicdn
     u = re.sub(r"_(?:\d+x\d*|\d*x\d+)(?=\.(?:jpe?g|png|webp))", "", u, flags=re.I)  # Shopify
     u = re.sub(r"/cache/[0-9a-f]{32}/", "/", u)                      # Magento resized cache
+    if re.search(r"[?&](?:[\w.-]*resize|w|h|width|height|size)=", u, re.I):
+        u = u.split("?", 1)[0]                                       # resize query (EdgeOne, imgix...)
     return u
 
 
@@ -62,7 +64,7 @@ def candidates(page_url, body):
     def push(u):
         if not u:
             return
-        u = urljoin(page_url, u.strip())
+        u = urljoin(page_url, html.unescape(u.strip()))
         if u.startswith("//"):
             u = "https:" + u
         if urlparse(u).scheme in ("http", "https") and not SKIP.search(u):

@@ -9,8 +9,13 @@
 | `file <رابط صورة>` | يحفظ صورة وحدة |
 
 ```
+# مباشرة من جلسة Claude، كي يكون الموقع (والسيرفر تاع الصور تاعو) مفتوح في البيئة:
+python3 tools/web-grab/grab.py --request-file req.txt --out out/
+# ولا عن طريق GitHub:
 tools/remote/job.sh web-grab 'images https://example.com/product.html'
 ```
+
+مواقع كبار كيما eBay وAmazon وAliExpress ساعات يرفضو التحميل الأوتوماتيكي (403).
 
 كل صورة تخرج JPEG، أكبر جانب 2000 بيكسل، أقل من 3 ميغا (باش تدخل لـ Drive).
 
